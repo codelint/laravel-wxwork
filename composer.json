@@ -1,0 +1,25 @@
+{
+    "name": "codelint/laravel-wxwork",
+    "description": "企业微信laravel工具箱",
+    "type": "library",
+    "require": {
+        "laravel/framework": "^8.65|~9.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Codelint\\Ringo\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+        }
+    },
+    "authors": [
+        {
+            "name": "Codelint",
+            "email": "codelint@foxmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
