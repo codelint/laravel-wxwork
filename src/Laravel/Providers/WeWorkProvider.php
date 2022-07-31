@@ -36,6 +36,12 @@ abstract class WeWorkProvider extends ServiceProvider
         app()->singleton('wx-work.sdk.config', function(){
             return $this->config();
         });
+
+        $this->app->singleton('wx-work.sdk.crypt', function () {
+            $token = $this->config()->token();
+            $aseKey = $this->config()->aes_key();
+            return new \Com\Codelint\WxWork\Sdk\WXBizMsgCrypt($token, $aseKey, $this->config()->corpId());
+        });
         // $this->mapWebRoutes();
     }
 

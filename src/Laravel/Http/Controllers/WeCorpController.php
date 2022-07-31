@@ -62,7 +62,7 @@ abstract class WeCorpController extends BaseController
         /**
          * @var $crypt WXBizMsgCrypt
          */
-        $crypt = app('wx-crypt');
+        $crypt = app('wx-work.sdk.crypt');
         $sig = request('msg_signature', '');
         $nonce = request('nonce', '');
         $tis = request('timestamp', '');
