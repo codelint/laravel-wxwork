@@ -90,7 +90,7 @@ abstract class WeCorpController extends BaseController
                         $this->onText($msg);
                         break;
                     case 'event':
-                        $this->onEvent($msg->event(), $msg);
+                        $this->onEvent($msg->event() ?? '', $msg);
                         break;
                     case 'location':
                         $this->onLocation($msg);
