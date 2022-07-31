@@ -3,6 +3,9 @@
     "description": "企业微信laravel工具箱",
     "type": "library",
     "require": {
+        "ext-simplexml": "*" ,
+        "ext-libxml": "*",
+        "ext-curl": "*",
         "laravel/framework": "^8.65|~9.2"
     },
     "license": "MIT",
