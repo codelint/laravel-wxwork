@@ -8,7 +8,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Codelint\\Ringo\\": "src/"
+            "Com\\Codelint\\WxWork\\": "src/"
         }
     },
     "autoload-dev": {
