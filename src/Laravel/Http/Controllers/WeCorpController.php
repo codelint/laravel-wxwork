@@ -34,7 +34,13 @@ abstract class WeCorpController extends BaseController
         return $this->getConfig()->aes_key();
     }
 
-    abstract protected function onMessage($msg): void;
+    protected function onMessage(WXMessage $msg): void {}
+
+    protected function onEvent(string $event, WXMessage $msg): void {}
+
+    protected function onText(WXMessage $msg): void {}
+
+    protected function onLocation(WXMessage $msg): void{}
 
     public function echoStr()
     {
@@ -77,7 +83,22 @@ abstract class WeCorpController extends BaseController
         if ($xml = simplexml_load_string($message, 'SimpleXMLElement', LIBXML_NOCDATA))
         {
             $arr = json_decode(json_encode($xml, JSON_UNESCAPED_UNICODE), true);
-            $this->onMessage(new WXMessage($arr));
+            $this->onMessage(tap(new WXMessage($arr), function (WXMessage $msg) {
+                switch ($msg->msgType())
+                {
+                    case 'text':
+                        $this->onText($msg);
+                        break;
+                    case 'event':
+                        $this->onEvent($msg->event(), $msg);
+                        break;
+                    case 'location':
+                        $this->onLocation($msg);
+                        break;
+                    default:
+                }
+            }));
+
             return response('ok');
         }
 
