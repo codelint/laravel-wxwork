@@ -15,10 +15,10 @@ class TestProvider extends WeWorkProvider
     function config(): Config
     {
         return new Config(
-            'ww84ac99edc8914b81',
-            '_nOyJeY6Ex655ck10s0fQ9ScN_rWglZtb7IOZg_JPKs',
-            'vtjNFXJ6ONNl5MLdyaToRdDkqEVJYqaCc6jYIx2mZPz',
-            '0q76LOd7p45nBHV9bm',
-            '1000002');
+            env('CROP_ID', ''),
+            env('SECRET', ''),
+            env('AES_KEY', ''),
+            env('TOKEN', ''),
+            env('AGENT_ID', ''));
     }
 }
