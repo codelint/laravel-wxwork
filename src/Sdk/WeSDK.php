@@ -102,6 +102,13 @@ class WeSDK
         return $ret['department'] ?? [];
     }
 
+    public function department($department_id)
+    {
+        $ret = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/department/get', ['id' => $department_id]);
+
+        return $ret['department'] ?? null;
+    }
+
     /**
      * user id to open id
      * @param $uid
@@ -176,4 +183,22 @@ class WeSDK
 
         return $res && $res['errmsg'] == 'ok';
     }
+
+    /**
+     * @param $code
+     * @return array list($open_id, $user_id, $device_id)
+     */
+    public function oauth($code)
+    {
+        $ret = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo', ['code' => $code]);
+
+        if ($did = $ret['DeviceId'] ?? null)
+        {
+            $uid = $ret['UserId'] ?? null;
+            $oid = $uid ? $this->u2o($uid) : ($ret['OpenId'] ?? null);
+            return [$oid, $uid, $did];
+        }
+        return [null, null, null];
+    }
+
 }

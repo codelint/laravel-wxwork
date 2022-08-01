@@ -72,5 +72,16 @@ class AppAgent
         return $this->sdk;
     }
 
+    public function oauthUrl($redirect_uri, $state = 'wx-work')
+    {
+        $redirect_uri = urlencode($redirect_uri);
+        return "https://open.weixin.qq.com/connect/oauth2/authorize?appid={$this->corp_id}&redirect_uri={$redirect_uri}&response_type=code&scope=snsapi_base&state={$state}&agentid={$this->agent_id}#wechat_redirect";
+    }
+    
+    public function oauth($code): array
+    {
+        return $this->sdk->oauth($code);
+    }
+
 
 }
