@@ -1,5 +1,7 @@
 <?php namespace Com\Codelint\WxWork\Sdk;
 
+use Illuminate\Support\Arr;
+
 /**
  * WeSDK:
  * @date 2022/8/1
@@ -73,6 +75,25 @@ class WeSDK
 
             $this->wePost($url, $params, 'post');
         }
+    }
+
+    public function getUsers($department_id = 0)
+    {
+        $ret = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/user/list', ['department_id' => $department_id]);
+
+        return $ret['userlist'] ?? [];
+    }
+
+    public function getUserInfo($uid)
+    {
+        $ret = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/user/get', ['userid' => $uid]);
+
+        if ($ret && ($ret['errmsg'] ?? null) === 'ok')
+        {
+            return Arr::except($ret, ['errcode', 'errmsg']);
+        }
+
+        return null;
     }
 
     public function departments($parent_id = null)

@@ -35,7 +35,7 @@ trait ApiCall
         $token_res = cache()->remember('codelint/laravel-wxwork:' . $md5, $ttl, function () {
             $corpId = $this->getCorpId();
             $secret = $this->getSecret();
-            return $this->callOnce('https://qyapi.weixin.qq.com/cgi-bin/gettoken', array(
+            return $this->apiCall('https://qyapi.weixin.qq.com/cgi-bin/gettoken', array(
                 'corpid' => $corpId,
                 'corpsecret' => $secret
             ), 'get');
