@@ -23,7 +23,6 @@ class Config
         $this->agent_id = $agent_id;
     }
 
-
     public function corpId(): string
     {
         return $this->corp_id;

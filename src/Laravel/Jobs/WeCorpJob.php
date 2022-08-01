@@ -1,6 +1,7 @@
 <?php namespace Com\Codelint\WxWork\Laravel\Jobs;
 
 use Com\Codelint\WxWork\Laravel\Facade\Config;
+use Com\Codelint\WxWork\Sdk\ApiCall;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,7 +17,7 @@ use Illuminate\Support\Arr;
  **/
 class WeCorpJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, ApiCall;
 
     protected $corp_id;
     protected $agent_id;
@@ -48,22 +49,6 @@ class WeCorpJob implements ShouldQueue
             }
         }
         return $meta;
-    }
-
-    protected function getToken()
-    {
-        $ttl = 7200 - 500;
-        $md5 = md5($this->corp_id . $this->secret . $ttl);
-        $token_res = cache()->remember('codelint/laravel-wxwork:' . $md5, $ttl, function () {
-            $corpId = $this->corp_id;
-            $secret = $this->secret;
-            return $this->callOnce('https://qyapi.weixin.qq.com/cgi-bin/gettoken', array(
-                'corpid' => $corpId,
-                'corpsecret' => $secret
-            ), 'get');
-        });
-
-        return $token_res && isset($token_res['access_token']) ? $token_res['access_token'] : null;
     }
 
     protected function getMsgData($message, $info = [])
@@ -118,40 +103,16 @@ class WeCorpJob implements ShouldQueue
 
     protected function callOnce($url, $args = null, $method = "post", $headers = array(), $withCookie = false, $timeout = 10)
     {
-        $ch = curl_init();
-        if ($method == "post")
-        {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, is_string($args) ? $args : json_encode($args));
-            curl_setopt($ch, CURLOPT_POST, 1);
-        }
-        else
-        {
-            $data = $args ? http_build_query($args) : null;
-            if ($data)
-            {
-                if (stripos($url, "?") > 0)
-                {
-                    $url .= "&$data";
-                }
-                else
-                {
-                    $url .= "?$data";
-                }
-            }
-        }
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        if (!empty($headers))
-        {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        }
-        if ($withCookie)
-        {
-            curl_setopt($ch, CURLOPT_COOKIEJAR, $_COOKIE);
-        }
-        $r = curl_exec($ch);
-        curl_close($ch);
-        return @json_decode($r, true);
+        return $this->apiCall($url, $args, $method, $headers, $withCookie, $timeout);
+    }
+
+    protected function getCorpId(): string
+    {
+        return $this->corp_id ?? '';
+    }
+
+    protected function getSecret(): string
+    {
+        return $this->secret ?? '';
     }
 }
