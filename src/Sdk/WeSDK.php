@@ -124,6 +124,21 @@ class WeSDK
         return $ret['userid'] ?? null;
     }
 
+    public function m2u($mobile)
+    {
+        $ret = $this->wePost('https://qyapi.weixin.qq.com/cgi-bin/user/getuserid', ['mobile' => $mobile]);
+        return $ret['userid'] ?? null;
+    }
+
+    public function e2u($email)
+    {
+        $ret = $this->wePost('https://qyapi.weixin.qq.com/cgi-bin/user/get_userid_by_email', [
+            'email' => $email,
+            'email_type' => 1
+        ]);
+        return $ret['userid'] ?? null;
+    }
+
     public function getChannel($channel_id)
     {
         $res = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/appchat/get', array(
