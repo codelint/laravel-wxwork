@@ -1,5 +1,6 @@
 <?php namespace Com\Codelint\WxWork\Laravel\Providers;
 
+use Com\Codelint\WxWork\Sdk\AppAgent;
 use Com\Codelint\WxWork\Sdk\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -41,6 +42,16 @@ abstract class WeWorkProvider extends ServiceProvider
             $token = $this->config()->token();
             $aseKey = $this->config()->aes_key();
             return new \Com\Codelint\WxWork\Sdk\WXBizMsgCrypt($token, $aseKey, $this->config()->corpId());
+        });
+
+        $this->app->singleton('wx-work.sdk.agent', function(){
+            return new AppAgent(
+                $this->config()->corpId(),
+                $this->config()->agentId(),
+                $this->config()->secret(),
+                $this->config()->token(),
+                $this->config()->aes_key()
+            );
         });
         // $this->mapWebRoutes();
     }

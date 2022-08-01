@@ -62,5 +62,15 @@ class AppAgent
         return null;
     }
 
+    public function agent(): static
+    {
+        return $this;
+    }
+
+    public function sdk(): WeSDK
+    {
+        return $this->sdk;
+    }
+
 
 }
