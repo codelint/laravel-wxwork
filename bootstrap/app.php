@@ -28,12 +28,12 @@ $app = new Illuminate\Foundation\Application(
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
+    Com\Codelint\WxWork\Console\Console\Kernel::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    Com\Codelint\WxWork\Console\Exceptions\Handler::class
 );
 
 /*

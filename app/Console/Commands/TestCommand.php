@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Com\Codelint\WxWork\Console\Console\Commands;
 
 use Com\Codelint\WxWork\Laravel\Facade\CorpAgent;
 use Illuminate\Console\Command;
@@ -42,6 +42,7 @@ class TestCommand extends Command
     {
         $users = CorpAgent::sdk()->department(2);
 
+        $this->info(env('CORP_ID'));
         $this->info(json_encode($users));
 
         return Command::SUCCESS;

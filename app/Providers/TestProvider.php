@@ -1,4 +1,4 @@
-<?php namespace App\Providers;
+<?php namespace Com\Codelint\WxWork\Console\Providers;
 
 use Com\Codelint\WxWork\Laravel\Providers\WeWorkProvider;
 use Com\Codelint\WxWork\Sdk\Config;

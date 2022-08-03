@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions;
+namespace Com\Codelint\WxWork\Console\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;

@@ -11,12 +11,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
+            "Com\\Codelint\\WxWork\\Console\\": "app/",
             "Com\\Codelint\\WxWork\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\": "app/"
         }
     },
     "authors": [
