@@ -15,7 +15,7 @@ class TestProvider extends WeWorkProvider
     function config(): Config
     {
         return new Config(
-            env('CROP_ID', ''),
+            env('CORP_ID', ''),
             env('SECRET', ''),
             env('AES_KEY', ''),
             env('TOKEN', ''),
