@@ -29,7 +29,20 @@ class AppAgent
         $this->crypt = new WXBizMsgCrypt($this->token, $this->aes_key, $this->corp_id);
     }
 
-    public function send($uid, $message, $info): bool
+    public function broadcast($message, $info = []): void
+    {
+        // $this->sdk->getUsers()
+        $users = $this->sdk->getDepartmentUsers($info['department_id'] ?? null);
+        foreach ($users as $u)
+        {
+            if($u['mobile'] && $u['biz_mail'])
+            {
+                 $this->send($u['userid'], $message, $info);
+            }
+        }
+    }
+
+    public function send($uid, $message, $info = []): bool
     {
         return $this->sdk->chat($this->agent_id, $uid, $message, $info);
     }

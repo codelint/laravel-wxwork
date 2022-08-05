@@ -40,10 +40,10 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $users = CorpAgent::sdk()->department(2);
-
-        $this->info(env('CORP_ID'));
-        $this->info(json_encode($users));
+         // $users = CorpAgent::sdk()->broadcast('');
+        CorpAgent::agent()->broadcast('hello world!!!', ['department_id' => 8]);
+//        $users = CorpAgent::sdk()->departments(8);
+//        $this->info(json_encode($users));
 
         return Command::SUCCESS;
     }

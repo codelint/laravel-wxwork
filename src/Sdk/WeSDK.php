@@ -31,14 +31,7 @@ class WeSDK
         $this->secret = $secret;
     }
 
-    /**
-     * @desc broadcast message to channel[channel_id]
-     * @param $channel_id
-     * @param $message
-     * @param $info
-     * @return bool
-     */
-    public function broadcast($channel_id, $message, $info): bool
+    public function multicast($channel_id, $message, $info): bool
     {
         $params = MsgData::build($message, $info);
         // print_r($params);
@@ -57,6 +50,18 @@ class WeSDK
         }
     }
 
+    /**
+     * @desc broadcast message to channel[channel_id]
+     * @param $channel_id
+     * @param $message
+     * @param $info
+     * @return bool
+     */
+    public function broadcast($channel_id, $message, $info): bool
+    {
+        return $this->multicast($channel_id, $message, $info);
+    }
+
     public function chat($agent_id, $uid, $message, $info): bool
     {
         $token = $this->getToken();
@@ -65,7 +70,7 @@ class WeSDK
         {
             $url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send';
 
-            $params = MsgData::build($message, $info);
+            $params = MsgData::build($message, $info)->toArray();
             // print_r($params);
             $params['touser'] = $uid;
             $params['safe'] = 0;
@@ -73,8 +78,10 @@ class WeSDK
             $params['duplicate_check_interval'] = 60;
             $params['agentid'] = $agent_id;
 
-            $this->wePost($url, $params, 'post');
+            $ret = $this->wePost($url, $params);
+            return ($ret['errmsg'] ?? '') === 'ok';
         }
+        return false;
     }
 
     public function getUsers($department_id = 0)
@@ -82,6 +89,37 @@ class WeSDK
         $ret = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/user/list', ['department_id' => $department_id]);
 
         return $ret['userlist'] ?? [];
+    }
+
+    public function getDepartmentUsers($department_id = null)
+    {
+        $departments = collect($this->departments($department_id));
+
+        $users = $departments->count() > 0 ? $this->getUsers($departments[0]['id']) : [];
+        $users = collect($users)->mapWithKeys(function ($v) use ($departments) {
+            $v['departments'] = [$departments[0]];
+            return array($v['userid'] => $v);
+        });
+
+        if ($departments->count() <= 1)
+        {
+            return $users->values();
+        }
+
+        $children = $departments->slice(1);
+        foreach ($children as $child)
+        {
+            $sub_users = $this->getDepartmentUsers($child['id']);
+            foreach ($sub_users as $sub_user)
+            {
+                $sub_user['departments'] = isset($users[$sub_user['userid']]) ? $users[$sub_user['userid']]['departments'] : [];
+
+                $sub_user['departments'][] = $child;
+                $users[$sub_user['userid']] = $sub_user;
+            }
+        }
+
+        return collect($users)->values();
     }
 
     public function getUserInfo($uid)
@@ -98,7 +136,7 @@ class WeSDK
 
     public function departments($parent_id = null)
     {
-        $ret = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/department/list', $parent_id ? [] : ['id' => $parent_id]);
+        $ret = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/department/list', !$parent_id ? [] : ['id' => $parent_id]);
         return $ret['department'] ?? [];
     }
 
@@ -107,6 +145,11 @@ class WeSDK
         $ret = $this->weGet('https://qyapi.weixin.qq.com/cgi-bin/department/get', ['id' => $department_id]);
 
         return $ret['department'] ?? null;
+    }
+
+    public function top_department()
+    {
+        return collect($this->departments())->where('parentid', 0)->first();
     }
 
     /**
