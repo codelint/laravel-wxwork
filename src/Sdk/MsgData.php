@@ -65,8 +65,8 @@ class MsgData
 
     static function textcard($message, $url, $summary = '', $btntxt = 'more'): MsgData
     {
-        $msg = new MsgData('text');
-        $msg->msg_type = 'text';
+        $msg = new MsgData('textcard');
+        $msg->msg_type = 'textcard';
         $msg->bag['textcard'] = [
             'title' => $message,
             'description' => $summary,
@@ -78,8 +78,8 @@ class MsgData
 
     static function news($message, $url, $summary, $pic_url): MsgData
     {
-        $msg = new MsgData('text');
-        $msg->msg_type = 'text';
+        $msg = new MsgData('news');
+        $msg->msg_type = 'news';
         $msg->bag['news'] = [
             'articles' => [
                 array(
