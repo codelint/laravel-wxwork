@@ -15,7 +15,7 @@ class WeSDK
     protected string $corp_id;
     protected string $secret;
 
-    protected function getCorpId(): string
+    public function getCorpId(): string
     {
         return $this->corp_id;
     }

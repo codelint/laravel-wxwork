@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 trait ApiCall
 {
 
-    abstract protected function getCorpId(): string;
+    abstract public function getCorpId(): string;
     abstract protected function getSecret(): string;
 
     protected function weGet($url, $args = [])

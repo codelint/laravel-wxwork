@@ -106,7 +106,7 @@ class WeCorpJob implements ShouldQueue
         return $this->apiCall($url, $args, $method, $headers, $withCookie, $timeout);
     }
 
-    protected function getCorpId(): string
+    public function getCorpId(): string
     {
         return $this->corp_id ?? '';
     }
