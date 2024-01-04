@@ -6,7 +6,7 @@
         "ext-simplexml": "*" ,
         "ext-libxml": "*",
         "ext-curl": "*",
-        "laravel/framework": "^8.65|~9.2"
+        "laravel/framework": "^8.65|~10.10"
     },
     "license": "MIT",
     "autoload": {
